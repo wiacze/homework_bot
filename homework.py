@@ -40,17 +40,12 @@ HOMEWORK_VERDICTS = {
 
 
 def check_tokens():
-    """
-    Проверяет доступность переменных окружения.
-    """
+    """Проверяет доступность переменных окружения."""
     return all([PRACTICUM_TOKEN, TELEGRAM_TOKEN, TELEGRAM_CHAT_ID])
 
 
 def send_message(bot, message):
-    """
-    Отправляет сообщение в Telegram-чат,
-    определяемый переменной окружения TELEGRAM_CHAT_ID.
-    """
+    """Отправляет сообщение в Telegram-чат."""
     try:
         bot.send_message(
             chat_id=TELEGRAM_CHAT_ID,
@@ -64,14 +59,12 @@ def send_message(bot, message):
 
 
 def get_api_answer(timestamp):
-    """
-    Делает запрос к единственному эндпоинту API-сервиса.
-    """
+    """Делает запрос к единственному эндпоинту API-сервиса."""
     payload = {'from_date': timestamp}
     try:
         response = requests.get(ENDPOINT, headers=HEADERS, params=payload)
         if response.status_code != HTTPStatus.OK:
-            raise ConnectionError(f'Эндпоинт недоступен. Статус: {status}')
+            raise ConnectionError('Эндпоинт недоступен.')
         return response.json()
     except requests.RequestException as error:
         logger.error('Не удалось получить ответ от API.')
@@ -79,9 +72,7 @@ def get_api_answer(timestamp):
 
 
 def check_response(response):
-    """
-    Проверяет ответ API на соответствие документации.
-    """
+    """Проверяет ответ API на соответствие документации."""
     if not isinstance(response, dict):
         raise TypeError('Ответ не является словарем.')
     current_date = response.get('current_date')
@@ -94,9 +85,7 @@ def check_response(response):
 
 
 def parse_status(homework):
-    """
-    Извлекает из информации о конкретной домашней работе статус этой работы.
-    """
+    """Извлекает статус из информации о конкретной домашней работе."""
     homework_name = homework.get('homework_name')
     if not homework_name:
         raise KeyError('Не удалось извлечь название д/з.')
@@ -109,7 +98,6 @@ def parse_status(homework):
 
 def main():
     """Основная логика работы бота."""
-
     if not check_tokens():
         logger.critical('Недоступность переменной окружения.')
         sys.exit()
