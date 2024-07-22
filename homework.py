@@ -113,6 +113,8 @@ def main():
             if homeworks:
                 message = parse_status(homeworks[0])
                 send_message(bot, message)
+            else:
+                logger.debug('Получен пустой список.')
         except Exception as error:
             message = f'Сбой в работе программы: {error}'
             logger.error(error)
