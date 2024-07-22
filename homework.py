@@ -104,13 +104,15 @@ def main():
 
     bot = TeleBot(token=TELEGRAM_TOKEN)
     timestamp = int(time.time())
+    logger.info('Бот начал работу.')
 
     while True:
         try:
             response = get_api_answer(timestamp)
             homeworks = check_response(response)
-            message = parse_status(homeworks[0])
-            send_message(bot, message)
+            if homeworks:
+                message = parse_status(homeworks[0])
+                send_message(bot, message)
         except Exception as error:
             message = f'Сбой в работе программы: {error}'
             logger.error(error)
