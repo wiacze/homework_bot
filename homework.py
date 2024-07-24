@@ -103,15 +103,6 @@ def parse_status(homework):
     return f'Изменился статус проверки работы "{homework_name}". {verdict}'
 
 
-def spam_checker(message, last_message):
-    """Предотвращает отправку одинаковых сообщений.
-    Возвращает True, если текущее сообщение отличается от предыдущего
-    """
-    if message == last_message:
-        return False
-    return True
-
-
 def main():
     """Основная логика работы бота."""
     if not check_tokens():
