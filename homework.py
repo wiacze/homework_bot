@@ -44,10 +44,12 @@ def check_tokens():
         'TELEGRAM_TOKEN': TELEGRAM_TOKEN,
         'TELEGRAM_CHAT_ID': TELEGRAM_CHAT_ID,
     }
+    result = True
     for key, value in tokens.items():
         if not value:
             logging.error(f'{key} недоступен и/или отсутствует.')
-    return all(tokens.values())
+            result = False
+    return result
 
 
 def send_message(bot, message):
@@ -68,16 +70,24 @@ def get_api_answer(timestamp):
     try:
         response = requests.get(ENDPOINT, headers=HEADERS, params=payload)
     except requests.RequestException:
-        return None
+        raise ConnectionError(
+            'Ошибка при запросе к API, не удалось получить ответ.'
+        )
     if response.status_code != HTTPStatus.OK:
-        raise ConnectionError('Эндпоинт недоступен, код не 200.')
+        raise ConnectionError(
+            'Код ответа не соответствует ожиданиям. '
+            f'Код: {response.status_code}'
+        )
     return response.json()
 
 
 def check_response(response):
     """Проверяет ответ API на соответствие документации."""
     if not isinstance(response, dict):
-        raise TypeError('Ответ API не является словарем.')
+        raise TypeError(
+            'Ответ API не является словарем. '
+            f'Полученный тип данных: {type(response)}'
+        )
     if 'current_date' not in response:
         raise KeyError('"current_date" отсутствует в ответе API.')
     current_date = response['current_date']
@@ -85,8 +95,11 @@ def check_response(response):
         raise KeyError('"homeworks" отсутствует в ответе API.')
     homeworks = response['homeworks']
     if not isinstance(homeworks, list):
-        raise TypeError('Содержимое словаря "homeworks" не является списком.')
-    return (current_date, homeworks)
+        raise TypeError(
+            'Содержимое словаря "homeworks" не является списком. '
+            f'Полученный тип данных: {type(homeworks)}'
+        )
+    return current_date, homeworks
 
 
 def parse_status(homework):
