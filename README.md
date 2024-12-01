@@ -5,6 +5,8 @@
 - Работа проверена: у ревьюера есть замечания;
 - Работа проверена: ревьюеру всё понравилось. Ура!
 
+Бот делает запросы к эндпоинту `https://practicum.yandex.ru/api/user_api/homework_statuses/`, доступ к которому возможен по токену. Получить токен можно по [адресу](https://oauth.yandex.ru/authorize?response_type=token&client_id=1d0b9dd4d652455a9eb710d450ff456a).
+
 ## Как запустить проект:
 <details>
   <summary>Инструкция по развертыванию для Windows</summary>
@@ -43,3 +45,6 @@ python homework.py
 ```
 
 </details>
+
+## Стек
+`Python 3.9`
